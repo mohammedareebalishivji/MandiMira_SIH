@@ -5,13 +5,15 @@ import {
 } from 'lucide-react';
 import { UserSession } from '../../types';
 import { TabId } from '../../data/navigation';
+import { Translations } from '../../i18n';
 
 interface Props {
   session: UserSession;
   onChangeTab: (tab: TabId) => void;
+  t: Translations;
 }
 
-export const WarehouseDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
+export const WarehouseDashboard: React.FC<Props> = ({ session, onChangeTab, t }) => {
   const [successToast, setSuccessToast] = useState<string | null>(null);
   const [occupancyQtl, setOccupancyQtl] = useState<number>(5400);
   const totalCapacityQtl = 8000;
@@ -54,11 +56,11 @@ export const WarehouseDashboard: React.FC<Props> = ({ session, onChangeTab }) =>
                   {session.organisation}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#2f6a41] text-white font-label-sm text-[10px] font-bold uppercase tracking-wider">
-                  Storage Cockpit
+                  {t.warehouseCockpit}
                 </span>
               </div>
               <p className="font-body-sm text-xs sm:text-sm text-[#404941]">
-                WDRA Registered Cold Chain &amp; Modern Chawl Facility · Lasalgaon Hub · e-NWR Bank Pledge Accredited.
+                {t.warehouseTagline}
               </p>
             </div>
           </div>
@@ -69,7 +71,7 @@ export const WarehouseDashboard: React.FC<Props> = ({ session, onChangeTab }) =>
               className="min-h-[40px] px-3.5 rounded-xl bg-[#2f6a41] hover:bg-[#1f4a2d] text-white font-label-md text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-98 transition-all"
             >
               <FileCheck className="w-4 h-4" />
-              <span>Issue e-NWR Receipt</span>
+              <span>{t.ctaIssueENWR}</span>
             </button>
           </div>
         </div>

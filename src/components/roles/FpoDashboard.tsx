@@ -5,13 +5,15 @@ import {
 } from 'lucide-react';
 import { UserSession } from '../../types';
 import { TabId } from '../../data/navigation';
+import { Translations } from '../../i18n';
 
 interface Props {
   session: UserSession;
   onChangeTab: (tab: TabId) => void;
+  t: Translations;
 }
 
-export const FpoDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
+export const FpoDashboard: React.FC<Props> = ({ session, onChangeTab, t }) => {
   const [activeTab, setActiveTab] = useState<'pools' | 'members' | 'settlement'>('pools');
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
@@ -67,11 +69,11 @@ export const FpoDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
                   {session.organisation}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#003b1b] text-white font-label-sm text-[10px] font-bold uppercase tracking-wider">
-                  FPO Cockpit
+                  {t.fpoCockpit}
                 </span>
               </div>
               <p className="font-body-sm text-xs sm:text-sm text-[#404941]">
-                Cooperative volume aggregation, bulk processor contracts, and transparent split settlement for 412 smallholders.
+                {t.fpoTagline}
               </p>
             </div>
           </div>
@@ -82,7 +84,7 @@ export const FpoDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
               className="min-h-[40px] px-3.5 rounded-xl bg-[#16532d] hover:bg-[#003b1b] text-white font-label-md text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-98 transition-all"
             >
               <Building2 className="w-4 h-4" />
-              <span>Browse Processor Orders</span>
+              <span>{t.ctaBrowseOrders}</span>
             </button>
           </div>
         </div>
@@ -90,19 +92,19 @@ export const FpoDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
         {/* 4 Core FPO Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
           <div className="bg-[#f7faf5] rounded-xl p-3 border border-[#c0c9be]/30 flex flex-col">
-            <span className="font-label-sm text-[10.5px] uppercase tracking-wider text-[#717970]">Active Members</span>
+            <span className="font-label-sm text-[10.5px] uppercase tracking-wider text-[#717970]">{t.metricsActiveMembers}</span>
             <span className="font-metric-lg text-lg sm:text-xl font-bold text-[#191c1a]">412 Farmers</span>
             <span className="text-[10px] text-[#16532d] font-semibold">18 Member Villages</span>
           </div>
 
           <div className="bg-[#f7faf5] rounded-xl p-3 border border-[#c0c9be]/30 flex flex-col">
-            <span className="font-label-sm text-[10.5px] uppercase tracking-wider text-[#717970]">Aggregated Volume</span>
+            <span className="font-label-sm text-[10.5px] uppercase tracking-wider text-[#717970]">{t.metricsAggregatedVol}</span>
             <span className="font-metric-lg text-lg sm:text-xl font-bold text-[#003b1b]">41.2 Tonnes</span>
             <span className="text-[10px] text-[#717970]">Onion, Tomato, Soybean</span>
           </div>
 
           <div className="bg-[#f7faf5] rounded-xl p-3 border border-[#c0c9be]/30 flex flex-col">
-            <span className="font-label-sm text-[10.5px] uppercase tracking-wider text-[#717970]">Bulk Volume Premium</span>
+            <span className="font-label-sm text-[10.5px] uppercase tracking-wider text-[#717970]">{t.metricsBulkPremium}</span>
             <span className="font-metric-lg text-lg sm:text-xl font-bold text-[#16532d] flex items-center">
               +₹180/qtl
             </span>
@@ -110,7 +112,7 @@ export const FpoDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
           </div>
 
           <div className="bg-[#f7faf5] rounded-xl p-3 border border-[#c0c9be]/30 flex flex-col">
-            <span className="font-label-sm text-[10.5px] uppercase tracking-wider text-[#717970]">Member DBT Payouts</span>
+            <span className="font-label-sm text-[10.5px] uppercase tracking-wider text-[#717970]">{t.metricsPayouts}</span>
             <span className="font-metric-lg text-lg sm:text-xl font-bold text-[#191c1a]">98.4%</span>
             <span className="text-[10px] text-[#16532d] font-semibold">Zero payment disputes</span>
           </div>

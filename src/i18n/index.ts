@@ -82,6 +82,31 @@ export interface Translations {
   navMarkets: string;
   navBuyers: string;
   navLedger: string;
+  // Role cockpit badges & taglines (visible to non-farmer roles)
+  fpoCockpit: string;
+  traderCockpit: string;
+  buyerCockpit: string;
+  transporterCockpit: string;
+  warehouseCockpit: string;
+  officerCockpit: string;
+  fpoTagline: string;
+  traderTagline: string;
+  buyerTagline: string;
+  transporterTagline: string;
+  warehouseTagline: string;
+  officerTagline: string;
+  ctaBrowseOrders: string;
+  ctaLiveBidding: string;
+  ctaSupplyBoard: string;
+  ctaPostSpec: string;
+  ctaRouteSim: string;
+  ctaIssueENWR: string;
+  ctaDisputeDesk: string;
+  // Shared dashboard chrome
+  metricsActiveMembers: string;
+  metricsAggregatedVol: string;
+  metricsBulkPremium: string;
+  metricsPayouts: string;
 }
 
 const enStandard: Translations = {
@@ -142,7 +167,30 @@ const enStandard: Translations = {
   navDecision: 'Decision',
   navMarkets: 'Mandis',
   navBuyers: 'Buyers',
-  navLedger: 'Ledger'
+  navLedger: 'Ledger',
+  fpoCockpit: 'FPO Cockpit',
+  traderCockpit: 'Trader Cockpit',
+  buyerCockpit: 'Corporate Procurement',
+  transporterCockpit: 'Freight Fleet Cockpit',
+  warehouseCockpit: 'Storage Cockpit',
+  officerCockpit: 'APMC Market Regulator',
+  fpoTagline: 'Cooperative volume aggregation, bulk processor contracts, and transparent split settlement for 412 smallholders.',
+  traderTagline: 'Licensed Commission Agent & Spot Trader · APMC Licence MH-NSK-4471 · Pimpalgaon Yard.',
+  buyerTagline: 'Institutional Buyer & Food Processing Unit · Mohadi Facility · Contract Farming & Spot Procurement.',
+  transporterTagline: 'Commercial Fleet Operator · 6 Vehicles (Pickups to 16-Tonne Multiaxle) · Nashik APMC Corridor.',
+  warehouseTagline: 'WDRA Registered Cold Chain & Modern Chawl Facility · Lasalgaon Hub · e-NWR Bank Pledge Accredited.',
+  officerTagline: 'Market Secretary Oversight · Fair Trade Compliance · Arrival Volume & Anti-Cartel Monitoring.',
+  ctaBrowseOrders: 'Browse Processor Orders',
+  ctaLiveBidding: 'Live Bidding Yard',
+  ctaSupplyBoard: 'Direct Supply Board',
+  ctaPostSpec: 'Post New Procurement Spec',
+  ctaRouteSim: 'Costed Route Simulator',
+  ctaIssueENWR: 'Issue e-NWR Receipt',
+  ctaDisputeDesk: 'Dispute Mediation Desk',
+  metricsActiveMembers: 'Active Members',
+  metricsAggregatedVol: 'Aggregated Volume',
+  metricsBulkPremium: 'Bulk Volume Premium',
+  metricsPayouts: 'Member DBT Payouts'
 };
 
 const enEasy: Translations = {
@@ -264,7 +312,30 @@ const hiStandard: Translations = {
   navDecision: 'निर्णय',
   navMarkets: 'मंडी',
   navBuyers: 'खरीदार',
-  navLedger: 'बिक्री लेजर'
+  navLedger: 'बिक्री लेजर',
+  fpoCockpit: 'एफपीओ कॉकपिट',
+  traderCockpit: 'व्यापारी कॉकपिट',
+  buyerCockpit: 'कॉर्पोरेट खरीद',
+  transporterCockpit: 'परिवहन बेड़ा',
+  warehouseCockpit: 'भंडारण कॉकपिट',
+  officerCockpit: 'एपीएमसी नियामक',
+  fpoTagline: '412 लघु किसानों के लिए सहकारी थोक समुच्चय और पारदर्शी विभाजन भुगतान।',
+  traderTagline: 'लाइसेंस प्राप्त आढ़तिया और हाजिर व्यापारी · एपीएमसी लाइसेंस MH-NSK-4471 · पिंपलगांव यार्ड।',
+  buyerTagline: 'संस्थागत खरीदार और खाद्य प्रसंस्करण इकाई · मोहाड़ी सुविधा।',
+  transporterTagline: 'वाणिज्यिक बेड़ा ऑपरेटर · 6 वाहन · नासिक एपीएमसी कॉरिडोर।',
+  warehouseTagline: 'WDRA पंजीकृत कोल्ड चेन और आधुनिक चॉल सुविधा · लासलगांव हब।',
+  officerTagline: 'मंडी सचिव निगरानी · निष्पक्ष व्यापार अनुपालन और आगमन निगरानी।',
+  ctaBrowseOrders: 'प्रोसेसर ऑर्डर देखें',
+  ctaLiveBidding: 'लाइव बोली यार्ड',
+  ctaSupplyBoard: 'प्रत्यक्ष आपूर्ति बोर्ड',
+  ctaPostSpec: 'नई खरीद स्पेक पोस्ट करें',
+  ctaRouteSim: 'लागत रूट सिम्युलेटर',
+  ctaIssueENWR: 'ई-एनडब्ल्यूआर जारी करें',
+  ctaDisputeDesk: 'विवाद मध्यस्थता डेस्क',
+  metricsActiveMembers: 'सक्रिय सदस्य',
+  metricsAggregatedVol: 'कुल मात्रा',
+  metricsBulkPremium: 'थोक प्रीमियम',
+  metricsPayouts: 'सदस्य भुगतान'
 };
 
 const hiEasy: Translations = {
@@ -386,7 +457,30 @@ const mrStandard: Translations = {
   navDecision: 'निर्णय',
   navMarkets: 'मंडी',
   navBuyers: 'खरेदीदार',
-  navLedger: 'बिक्री'
+  navLedger: 'बिक्री',
+  fpoCockpit: 'एफपीओ कॉकपिट',
+  traderCockpit: 'व्यापारी कॉकपिट',
+  buyerCockpit: 'कॉर्पोरेट खरेदी',
+  transporterCockpit: 'वाहतूक ताफा',
+  warehouseCockpit: 'गोदाम कॉकपिट',
+  officerCockpit: 'एपीएमसी नियामक',
+  fpoTagline: '४१२ लहान शेतकऱ्यांसाठी सहकारी थोक एकत्रीकरण आणि पारदर्शक वाटप।',
+  traderTagline: 'परवानाधारक आडत्या आणि हजर व्यापारी · एपीएमसी परवाना MH-NSK-4471 · पिंपळगाव यार्ड।',
+  buyerTagline: 'संस्थात्मक खरेदीदार आणि अन्न प्रक्रिया युनिट · मोहाडी सुविधा।',
+  transporterTagline: 'व्यावसायिक ताफा ऑपरेटर · ६ वाहने · नाशिक एपीएमसी कॉरिडॉर।',
+  warehouseTagline: 'WDRA नोंदणीकृत शीत साखळी आणि आधुनिक चाळ सुविधा · लासलगाव हब।',
+  officerTagline: 'बाजार सचिव देखरेख · वाजवी व्यापार आणि आवक निरीक्षण।',
+  ctaBrowseOrders: 'प्रोसेसर ऑर्डर पहा',
+  ctaLiveBidding: 'थेट बोली यार्ड',
+  ctaSupplyBoard: 'थेट पुरवठा बोर्ड',
+  ctaPostSpec: 'नवीन खरेदी स्पेक पोस्ट करा',
+  ctaRouteSim: 'खर्च रूट सिम्युलेटर',
+  ctaIssueENWR: 'ई-एनडब्ल्यूआर जारी करा',
+  ctaDisputeDesk: 'तक्रार मध्यस्थी डेस्क',
+  metricsActiveMembers: 'सक्रिय सदस्य',
+  metricsAggregatedVol: 'एकूण प्रमाण',
+  metricsBulkPremium: 'थोक अधिमूल्य',
+  metricsPayouts: 'सदस्य पेमेंट'
 };
 
 const mrEasy: Translations = {

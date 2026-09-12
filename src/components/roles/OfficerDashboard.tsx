@@ -5,13 +5,15 @@ import {
 } from 'lucide-react';
 import { UserSession } from '../../types';
 import { TabId } from '../../data/navigation';
+import { Translations } from '../../i18n';
 
 interface Props {
   session: UserSession;
   onChangeTab: (tab: TabId) => void;
+  t: Translations;
 }
 
-export const OfficerDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
+export const OfficerDashboard: React.FC<Props> = ({ session, onChangeTab, t }) => {
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
   const handleIssueMediationOrder = (disputeId: string) => {
@@ -45,11 +47,11 @@ export const OfficerDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
                   {session.organisation}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#003fab] text-white font-label-sm text-[10px] font-bold uppercase tracking-wider">
-                  APMC Market Regulator
+                  {t.officerCockpit}
                 </span>
               </div>
               <p className="font-body-sm text-xs sm:text-sm text-[#404941]">
-                Market Secretary Oversight · Fair Trade Compliance · Arrival Volume &amp; Anti-Cartel Monitoring.
+                {t.officerTagline}
               </p>
             </div>
           </div>
@@ -60,7 +62,7 @@ export const OfficerDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
               className="min-h-[40px] px-3.5 rounded-xl bg-[#003fab] hover:bg-[#002b7b] text-white font-label-md text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-98 transition-all"
             >
               <Scale className="w-4 h-4" />
-              <span>Dispute Mediation Desk</span>
+              <span>{t.ctaDisputeDesk}</span>
             </button>
           </div>
         </div>

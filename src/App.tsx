@@ -249,22 +249,22 @@ export default function App() {
       /* ---- FARMER / FPO HOME: the integrated two-column view ---- */
       case 'home':
         if (session.role === 'fpo') {
-          return <FpoDashboard session={session} onChangeTab={setActiveTab} />;
+          return <FpoDashboard session={session} onChangeTab={setActiveTab} t={t} />;
         }
         if (session.role === 'middleman') {
-          return <MiddlemanDashboard session={session} onChangeTab={setActiveTab} />;
+          return <MiddlemanDashboard session={session} onChangeTab={setActiveTab} t={t} />;
         }
         if (session.role === 'buyer') {
-          return <BuyerDashboard session={session} onChangeTab={setActiveTab} />;
+          return <BuyerDashboard session={session} onChangeTab={setActiveTab} t={t} />;
         }
         if (session.role === 'transporter') {
-          return <TransporterDashboard session={session} onChangeTab={setActiveTab} />;
+          return <TransporterDashboard session={session} onChangeTab={setActiveTab} t={t} />;
         }
         if (session.role === 'warehouse') {
-          return <WarehouseDashboard session={session} onChangeTab={setActiveTab} />;
+          return <WarehouseDashboard session={session} onChangeTab={setActiveTab} t={t} />;
         }
         if (session.role === 'officer') {
-          return <OfficerDashboard session={session} onChangeTab={setActiveTab} />;
+          return <OfficerDashboard session={session} onChangeTab={setActiveTab} t={t} />;
         }
 
         return (
@@ -383,7 +383,13 @@ export default function App() {
       case 'logistics':
         return (
           <div className="max-w-3xl mx-auto w-full">
-            <TransportStoragePanel lot={lot} distanceKm={nearestMandiKm} />
+            <TransportStoragePanel
+              lot={lot}
+              distanceKm={nearestMandiKm}
+              mandis={mandis}
+              role={session?.role}
+              onNavigateToTab={setActiveTab}
+            />
           </div>
         );
 
@@ -615,6 +621,7 @@ export default function App() {
         pool={selectedPoolForLogistics}
         lot={lot}
         onCompleteSale={handleCompleteSale}
+        onNavigateToLedger={() => setActiveTab('ledger')}
       />
 
       {/* Profile & session */}

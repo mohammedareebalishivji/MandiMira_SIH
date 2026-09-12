@@ -5,13 +5,15 @@ import {
 } from 'lucide-react';
 import { UserSession } from '../../types';
 import { TabId } from '../../data/navigation';
+import { Translations } from '../../i18n';
 
 interface Props {
   session: UserSession;
   onChangeTab: (tab: TabId) => void;
+  t: Translations;
 }
 
-export const BuyerDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
+export const BuyerDashboard: React.FC<Props> = ({ session, onChangeTab, t }) => {
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
   const handleAuthorizeRelease = (farmer: string, amount: number) => {
@@ -45,11 +47,11 @@ export const BuyerDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
                   {session.organisation}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#002b7b] text-white font-label-sm text-[10px] font-bold uppercase tracking-wider">
-                  Corporate Procurement
+                  {t.buyerCockpit}
                 </span>
               </div>
               <p className="font-body-sm text-xs sm:text-sm text-[#404941]">
-                Institutional Buyer &amp; Food Processing Unit · Mohadi Facility · Contract Farming &amp; Spot Procurement.
+                {t.buyerTagline}
               </p>
             </div>
           </div>
@@ -60,7 +62,7 @@ export const BuyerDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
               className="min-h-[40px] px-3.5 rounded-xl bg-[#002b7b] hover:bg-[#003fab] text-white font-label-md text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-98 transition-all"
             >
               <Plus className="w-4 h-4" />
-              <span>Post New Procurement Spec</span>
+              <span>{t.ctaPostSpec}</span>
             </button>
           </div>
         </div>

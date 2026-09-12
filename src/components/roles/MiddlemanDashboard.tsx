@@ -6,13 +6,15 @@ import {
 import { UserSession } from '../../types';
 import { TabId } from '../../data/navigation';
 import { CROP_BENCHMARKS } from '../../data/marketData';
+import { Translations } from '../../i18n';
 
 interface Props {
   session: UserSession;
   onChangeTab: (tab: TabId) => void;
+  t: Translations;
 }
 
-export const MiddlemanDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
+export const MiddlemanDashboard: React.FC<Props> = ({ session, onChangeTab, t }) => {
   const [calcCrop, setCalcCrop] = useState<'onion' | 'tomato' | 'potato' | 'soybean' | 'wheat'>('onion');
   const [calcBuyPrice, setCalcBuyPrice] = useState<number>(2850);
   const [calcQuantityQtl, setCalcQuantityQtl] = useState<number>(50);
@@ -39,11 +41,11 @@ export const MiddlemanDashboard: React.FC<Props> = ({ session, onChangeTab }) =>
                   {session.organisation}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#904d00] text-white font-label-sm text-[10px] font-bold uppercase tracking-wider">
-                  Trader Cockpit
+                  {t.traderCockpit}
                 </span>
               </div>
               <p className="font-body-sm text-xs sm:text-sm text-[#404941]">
-                Licensed Commission Agent &amp; Spot Trader · APMC Licence MH-NSK-4471 · Pimpalgaon Yard.
+                {t.traderTagline}
               </p>
             </div>
           </div>
@@ -54,7 +56,7 @@ export const MiddlemanDashboard: React.FC<Props> = ({ session, onChangeTab }) =>
               className="min-h-[40px] px-3.5 rounded-xl bg-[#16532d] hover:bg-[#003b1b] text-white font-label-md text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-98 transition-all"
             >
               <Gavel className="w-4 h-4" />
-              <span>Live Bidding Yard</span>
+              <span>{t.ctaLiveBidding}</span>
             </button>
           </div>
         </div>

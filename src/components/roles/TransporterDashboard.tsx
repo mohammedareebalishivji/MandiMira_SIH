@@ -1,19 +1,40 @@
 import React, { useState } from 'react';
 import {
   Truck, ShieldCheck, MapPin, IndianRupee, Clock, ArrowRight, CheckCircle2,
-  Calendar, Fuel, Route, AlertCircle, FileCheck
+  Calendar, Fuel, Route, AlertCircle, FileCheck, FileText, Phone, X, Download
 } from 'lucide-react';
 import { UserSession } from '../../types';
 import { TabId } from '../../data/navigation';
+import { Translations } from '../../i18n';
 
 interface Props {
   session: UserSession;
   onChangeTab: (tab: TabId) => void;
+  t: Translations;
 }
 
-export const TransporterDashboard: React.FC<Props> = ({ session, onChangeTab }) => {
+export const TransporterDashboard: React.FC<Props> = ({ session, onChangeTab, t }) => {
   const [successToast, setSuccessToast] = useState<string | null>(null);
   const [acceptedJobs, setAcceptedJobs] = useState<string[]>([]);
+  const [isBackhaulBooked, setIsBackhaulBooked] = useState(false);
+  const [selectedJobForWaybill, setSelectedJobForWaybill] = useState<{
+    id: string;
+    origin: string;
+    dest: string;
+    distance: string;
+    cargo: string;
+    client: string;
+    freight: number;
+    pickupTime: string;
+    type: string;
+  } | null>(null);
+  const [selectedJobForCall, setSelectedJobForCall] = useState<{
+    id: string;
+    origin: string;
+    dest: string;
+    client: string;
+    pickupTime: string;
+  } | null>(null);
 
   const handleAcceptJob = (jobId: string, route: string, freight: number) => {
     setAcceptedJobs((prev) => [...prev, jobId]);
@@ -47,11 +68,11 @@ export const TransporterDashboard: React.FC<Props> = ({ session, onChangeTab }) 
                   {session.organisation}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#663500] text-white font-label-sm text-[10px] font-bold uppercase tracking-wider">
-                  Freight Fleet Cockpit
+                  {t.transporterCockpit}
                 </span>
               </div>
               <p className="font-body-sm text-xs sm:text-sm text-[#404941]">
-                Commercial Fleet Operator · 6 Vehicles (Pickups to 16-Tonne Multiaxle) · Nashik APMC Corridor.
+                {t.transporterTagline}
               </p>
             </div>
           </div>
@@ -62,7 +83,7 @@ export const TransporterDashboard: React.FC<Props> = ({ session, onChangeTab }) 
               className="min-h-[40px] px-3.5 rounded-xl bg-[#663500] hover:bg-[#4a2600] text-white font-label-md text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-98 transition-all"
             >
               <Route className="w-4 h-4" />
-              <span>Costed Route Simulator</span>
+              <span>{t.ctaRouteSim}</span>
             </button>
           </div>
         </div>
@@ -180,13 +201,29 @@ export const TransporterDashboard: React.FC<Props> = ({ session, onChangeTab }) 
                   </span>
 
                   {isAccepted ? (
-                    <span className="font-bold text-xs text-[#16532d] flex items-center gap-1">
-                      <CheckCircle2 className="w-4 h-4" /> Load Accepted · Driver Dispatched
-                    </span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-bold text-xs text-[#16532d] flex items-center gap-1">
+                        <CheckCircle2 className="w-4 h-4" /> Load Accepted
+                      </span>
+                      <button
+                        onClick={() => setSelectedJobForWaybill(job)}
+                        className="px-2.5 py-1 rounded-md bg-[#16532d] text-white text-[11px] font-bold hover:bg-[#003b1b] cursor-pointer flex items-center gap-1 shadow-xs"
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Waybill</span>
+                      </button>
+                      <button
+                        onClick={() => setSelectedJobForCall(job)}
+                        className="px-2.5 py-1 rounded-md border border-[#c0c9be] bg-white text-[#404941] hover:text-[#191c1a] text-[11px] font-bold cursor-pointer flex items-center gap-1"
+                      >
+                        <Phone className="w-3 h-3 text-[#16532d]" />
+                        <span>Call Client</span>
+                      </button>
+                    </div>
                   ) : (
                     <button
                       onClick={() => handleAcceptJob(job.id, `${job.origin} → ${job.dest}`, job.freight)}
-                      className="px-4 py-1.5 rounded-lg bg-[#663500] hover:bg-[#4a2600] text-white font-bold text-xs cursor-pointer shadow-xs"
+                      className="px-4 py-1.5 rounded-lg bg-[#663500] hover:bg-[#4a2600] text-white font-bold text-xs cursor-pointer shadow-xs active:scale-98 transition-all"
                     >
                       Accept Consignment Job
                     </button>
@@ -211,16 +248,111 @@ export const TransporterDashboard: React.FC<Props> = ({ session, onChangeTab }) 
             Found 8 tonnes organic fertilizer consignment returning from Panvel MIDC to Nashik. Saves ₹4,200 diesel burn.
           </p>
         </div>
-        <button
-          onClick={() => {
-            setSuccessToast('Backhaul job booked! Panvel to Nashik cargo attached to vehicle MH-15-BX-9021.');
-            setTimeout(() => setSuccessToast(null), 5000);
-          }}
-          className="px-4 py-2 rounded-xl bg-[#663500] hover:bg-[#4a2600] text-white text-xs font-bold whitespace-nowrap cursor-pointer shadow-xs"
-        >
-          Book Return Leg (+₹6,400)
-        </button>
+        {isBackhaulBooked ? (
+          <span className="px-4 py-2 rounded-xl bg-[#b2f1be] text-[#00210c] text-xs font-bold whitespace-nowrap flex items-center gap-1.5 border border-[#16532d]/30 shadow-xs">
+            <CheckCircle2 className="w-4 h-4 text-[#16532d]" />
+            <span>Return Leg Secured (Vehicle MH-15-BX-9021)</span>
+          </span>
+        ) : (
+          <button
+            onClick={() => {
+              setIsBackhaulBooked(true);
+              setSuccessToast('Backhaul job booked! Panvel to Nashik cargo attached to vehicle MH-15-BX-9021.');
+              setTimeout(() => setSuccessToast(null), 5000);
+            }}
+            className="px-4 py-2 rounded-xl bg-[#663500] hover:bg-[#4a2600] text-white text-xs font-bold whitespace-nowrap cursor-pointer shadow-xs active:scale-98 transition-all"
+          >
+            Book Return Leg (+₹6,400)
+          </button>
+        )}
       </div>
+
+      {/* Waybill Modal */}
+      {selectedJobForWaybill && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3">
+          <div className="bg-white rounded-2xl max-w-md w-full p-4 sm:p-5 shadow-xl border border-[#c0c9be]/50 flex flex-col gap-3">
+            <div className="flex items-center justify-between border-b border-[#c0c9be]/40 pb-2">
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-[#16532d]" />
+                <h3 className="font-bold text-sm text-[#191c1a]">
+                  Consignment Waybill: WB-MH15-{selectedJobForWaybill.id.toUpperCase()}
+                </h3>
+              </div>
+              <button
+                onClick={() => setSelectedJobForWaybill(null)}
+                className="w-7 h-7 rounded-full bg-[#ecefea] flex items-center justify-center text-[#404941] cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="border border-dashed border-[#16532d]/40 rounded-xl p-3 bg-[#f7faf5] text-xs space-y-1.5">
+              <div className="flex justify-between font-bold text-[#003b1b]">
+                <span>APMC ELECTRONIC TRANSIT PASS</span>
+                <span>STATUS: DISPATCHED</span>
+              </div>
+              <div>Route: <strong>{selectedJobForWaybill.origin} ➔ {selectedJobForWaybill.dest} ({selectedJobForWaybill.distance})</strong></div>
+              <div>Cargo: <strong>{selectedJobForWaybill.cargo}</strong></div>
+              <div>Client: <strong>{selectedJobForWaybill.client}</strong></div>
+              <div>Vehicle Assigned: <strong>MH-15-EG-4812 (Driver: Balu Jadhav)</strong></div>
+              <div>Agreed Freight: <strong className="text-[#16532d]">₹{selectedJobForWaybill.freight.toLocaleString('en-IN')} (Escrow Secured)</strong></div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-[#c0c9be]/30">
+              <button
+                onClick={() => {
+                  setSuccessToast('Waybill downloaded as PDF!');
+                  setSelectedJobForWaybill(null);
+                }}
+                className="px-4 py-2 rounded-lg bg-[#16532d] text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer hover:bg-[#003b1b]"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Download / Print e-Waybill</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Call Client Modal */}
+      {selectedJobForCall && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-4 shadow-xl border border-[#c0c9be]/50 flex flex-col gap-3">
+            <div className="flex items-center justify-between border-b border-[#c0c9be]/40 pb-2">
+              <div className="flex items-center gap-2">
+                <Phone className="w-5 h-5 text-[#16532d]" />
+                <h3 className="font-bold text-sm text-[#191c1a]">Contact Consignor</h3>
+              </div>
+              <button
+                onClick={() => setSelectedJobForCall(null)}
+                className="w-7 h-7 rounded-full bg-[#ecefea] flex items-center justify-center text-[#404941] cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="bg-[#f7faf5] rounded-xl p-3 border border-[#c0c9be]/40 text-xs flex flex-col gap-1">
+              <span className="font-bold text-sm text-[#191c1a]">{selectedJobForCall.client}</span>
+              <span className="text-[#404941]">Pickup: {selectedJobForCall.origin} ({selectedJobForCall.pickupTime})</span>
+              <span className="text-xs font-mono font-bold text-[#16532d] mt-1">+91 94222 18940</span>
+            </div>
+
+            <div className="flex flex-col gap-2 pt-1">
+              <a
+                href="tel:+919422218940"
+                onClick={() => {
+                  setSuccessToast(`Calling ${selectedJobForCall.client}...`);
+                  setSelectedJobForCall(null);
+                }}
+                className="w-full py-2.5 rounded-lg bg-[#16532d] hover:bg-[#003b1b] text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+              >
+                <Phone className="w-4 h-4" />
+                <span>Call Client (+91 94222 18940)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
