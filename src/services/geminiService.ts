@@ -8,6 +8,7 @@ import {
   QualitySpec,
   UserRole
 } from '../types';
+import { predictPrice } from './aiPricePredictor';
 
 /**
  * Gemini-backed market intelligence.
@@ -93,17 +94,24 @@ const briefSchema = {
 };
 
 const fallbackBrief = (lot: FarmerLot, mandis: MandiItem[]): MarketBrief => {
+  const lotState = lot.district.split(',').pop()?.trim() || '';
+  const aiPred = predictPrice({
+    commodity: lot.cropType,
+    state: lotState || undefined,
+    grade: lot.grade,
+    quantityKg: lot.quantityKg
+  });
   const best = [...mandis].sort((a, b) => b.netRealizationPerQtl - a.netRealizationPerQtl)[0];
   const spread = best ? best.netRealizationPerQtl - lot.localMandiBenchmark : 0;
   return {
-    headline: `${lot.cropNameEn}: best net realisation today is ${best?.name ?? 'your local mandi'}.`,
-    priceOutlook: `Local benchmark is ₹${lot.localMandiBenchmark}/Qtl. After transport, ${best?.name ?? 'the local yard'} nets ₹${best?.netRealizationPerQtl ?? lot.localMandiBenchmark}/Qtl — a ₹${Math.abs(Math.round(spread))} ${spread >= 0 ? 'gain' : 'shortfall'} per quintal.`,
+    headline: `${lot.cropNameEn}: best net realisation today is ${best?.name ?? 'your local mandi'} (AI benchmark: ₹${aiPred.predictedModalPrice}/Qtl).`,
+    priceOutlook: `AI model predicts fair rate of ₹${aiPred.predictedModalPrice}/Qtl (Floor ₹${aiPred.negotiationCorridor.floorRate} – Target ₹${aiPred.negotiationCorridor.premiumRate}). After transport, ${best?.name ?? 'the local yard'} nets ₹${best?.netRealizationPerQtl ?? lot.localMandiBenchmark}/Qtl — a ₹${Math.abs(Math.round(spread))} ${spread >= 0 ? 'gain' : 'shortfall'} per quintal.`,
     demandSignal: 'Verified processor and retail demand is open for Grade A volume. Bulk lots attract a premium over single-farmer consignments.',
     actionNow: lot.hasRainAlert
       ? 'Rain alert active — move the lot under cover or despatch today rather than holding in the open.'
-      : 'Compare the net-of-transport column, not the headline rate, before booking a vehicle.',
+      : `Negotiate above the AI floor rate of ₹${aiPred.negotiationCorridor.floorRate}/Qtl before agreeing to a deal.`,
     riskFlag: 'Arrivals can swing intraday. Confirm the rate at the gate before unloading.',
-    confidence: 'medium'
+    confidence: aiPred.confidenceScore >= 80 ? 'high' : 'medium'
   };
 };
 
@@ -118,6 +126,14 @@ export const generateMarketBrief = async (
   const ai = getClient();
   if (!ai) return { data: fallbackBrief(lot, mandis), source: 'fallback', error: 'GEMINI_API_KEY is not set.' };
 
+  const lotState = lot.district.split(',').pop()?.trim() || '';
+  const aiPrice = predictPrice({
+    commodity: lot.cropType,
+    state: lotState || undefined,
+    grade: lot.grade,
+    quantityKg: lot.quantityKg
+  });
+
   const prompt = `You are an agricultural market analyst advising an Indian ${role} in ${lot.district}.
 Write in ${language}. Be concrete and numeric. Never invent prices beyond the data given.
 
@@ -127,6 +143,11 @@ FARMER LOT
 - Storage: ${lot.storageType}, available: ${lot.storageAvailable}
 - Rain alert: ${lot.hasRainAlert}, cash urgency: ${lot.cashUrgency}
 - Local mandi benchmark: Rs ${lot.localMandiBenchmark}/quintal
+
+AI MACHINE LEARNING BENCHMARK (trained on Data.csv APMC quotes)
+- Predicted Modal Price: Rs ${aiPrice.predictedModalPrice}/quintal (Confidence: ${aiPrice.confidenceScore}%)
+- Negotiation Corridor: Floor Rs ${aiPrice.negotiationCorridor.floorRate} to Premium Rs ${aiPrice.negotiationCorridor.premiumRate}/quintal
+- Backing Quotes: ${aiPrice.backingQuotesCount} quotes in training feed
 
 NEARBY MARKETS (gross rate, transport cost, net realisation, arrivals)
 ${mandis.map((m) => `- ${m.name}: gross Rs${m.grossPricePerQtl}, transport Rs${m.transportCostPerQtl}, NET Rs${m.netRealizationPerQtl}/Qtl, ${m.distanceKm}km, arrivals ${m.arrivalsTotalQtl} Qtl (${m.arrivalTrend})`).join('\n')}

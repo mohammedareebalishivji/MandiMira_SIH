@@ -2,6 +2,8 @@ import { FarmerLot, DecisionResult, MandiItem, BuyerOffer, PopUpPool, Transactio
 import { calculateSellingDecision } from '../services/decisionEngine';
 import { defaultMandis, defaultBuyers, defaultPool, initialTransactions } from '../data/mockData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { biddingService } from '../services/biddingService';
+import { stockService } from '../services/stockService';
 
 const TXN_TABLE = 'sales_transactions';
 
@@ -104,5 +106,32 @@ export const api = {
       }
       return txn;
     }
+  },
+
+  bidding: {
+    list: async () => biddingService.getAuctions(),
+    get: async (id: string) => biddingService.getAuction(id),
+    placeBid: async (
+      auctionId: string,
+      bidInput: Parameters<typeof biddingService.placeBid>[1]
+    ) => biddingService.placeBid(auctionId, bidInput),
+    acceptBid: async (auctionId: string, bidId: string) =>
+      biddingService.acceptBid(auctionId, bidId),
+    createAuction: async (
+      params: Parameters<typeof biddingService.createAuction>[0]
+    ) => biddingService.createAuction(params)
+  },
+
+  stock: {
+    listSupply: async () => stockService.getSupplyLots(),
+    postSupply: async (params: Parameters<typeof stockService.addSupplyLot>[0]) =>
+      stockService.addSupplyLot(params),
+    deleteSupply: async (id: string) => stockService.deleteSupplyLot(id),
+    listDemands: async () => stockService.getBuyerDemands(),
+    postDemand: async (params: Parameters<typeof stockService.addBuyerDemand>[0]) =>
+      stockService.addBuyerDemand(params),
+    fulfillDemand: async (demandId: string, quantityQtl: number, farmerName?: string) =>
+      stockService.fulfillDemand(demandId, quantityQtl, farmerName),
+    deleteDemand: async (id: string) => stockService.deleteBuyerDemand(id)
   }
 };

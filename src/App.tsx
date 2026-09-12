@@ -34,6 +34,15 @@ import { BuyerDemandBoard } from './components/BuyerDemandBoard';
 import { SupplyBoard } from './components/SupplyBoard';
 import { ImpactOutcomes } from './components/ImpactOutcomes';
 import { PriceModelPanel } from './components/PriceModelPanel';
+import { AIPricePredictor } from './components/AIPricePredictor';
+import { BiddingCenter } from './components/BiddingCenter';
+import { FarmerAuctionWidget } from './components/FarmerAuctionWidget';
+import { FpoDashboard } from './components/roles/FpoDashboard';
+import { MiddlemanDashboard } from './components/roles/MiddlemanDashboard';
+import { BuyerDashboard } from './components/roles/BuyerDashboard';
+import { TransporterDashboard } from './components/roles/TransporterDashboard';
+import { WarehouseDashboard } from './components/roles/WarehouseDashboard';
+import { OfficerDashboard } from './components/roles/OfficerDashboard';
 
 import {
   FarmerLot, BuyerOffer, PopUpPool, TransactionRecord, MandiItem,
@@ -239,6 +248,25 @@ export default function App() {
     switch (activeTab) {
       /* ---- FARMER / FPO HOME: the integrated two-column view ---- */
       case 'home':
+        if (session.role === 'fpo') {
+          return <FpoDashboard session={session} onChangeTab={setActiveTab} />;
+        }
+        if (session.role === 'middleman') {
+          return <MiddlemanDashboard session={session} onChangeTab={setActiveTab} />;
+        }
+        if (session.role === 'buyer') {
+          return <BuyerDashboard session={session} onChangeTab={setActiveTab} />;
+        }
+        if (session.role === 'transporter') {
+          return <TransporterDashboard session={session} onChangeTab={setActiveTab} />;
+        }
+        if (session.role === 'warehouse') {
+          return <WarehouseDashboard session={session} onChangeTab={setActiveTab} />;
+        }
+        if (session.role === 'officer') {
+          return <OfficerDashboard session={session} onChangeTab={setActiveTab} />;
+        }
+
         return (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 w-full items-start">
             <div className="lg:col-span-7 flex flex-col gap-4 w-full">
@@ -275,6 +303,12 @@ export default function App() {
                 onSelectMandiForDispatch={handleSelectMandiForDispatch}
               />
               <LeverageMode lot={lot} t={t} onOpenShareModal={() => setIsWhatsAppModalOpen(true)} />
+              <FarmerAuctionWidget
+                lot={lot}
+                session={session}
+                onOpenBiddingTab={() => setActiveTab('bidding')}
+                onOpenSourcingTab={() => setActiveTab('sourcing')}
+              />
               <BuyerMatchingPool
                 pool={pool}
                 buyers={buyers}
@@ -327,7 +361,7 @@ export default function App() {
             </div>
             <div className="flex flex-col gap-4">
               <ArrivalVolumePanel />
-              <PriceModelPanel lot={lot} />
+              <PriceModelPanel lot={lot} onOpenAIPredictor={() => setActiveTab('pricedata')} />
             </div>
           </div>
         );
@@ -364,23 +398,53 @@ export default function App() {
               onJoinPool={handleJoinPool}
               onAcceptBuyerOffer={handleAcceptBuyerOffer}
             />
-            <BuyerDemandBoard role={session.role} lot={lot} onRespond={handleRespondToDemand} />
+            <BuyerDemandBoard
+              role={session.role}
+              session={session}
+              lot={lot}
+              onRespond={handleRespondToDemand}
+            />
           </div>
         );
 
       case 'demand':
         return (
           <div className="max-w-3xl mx-auto w-full">
-            <BuyerDemandBoard role={session.role} lot={lot} onRespond={handleRespondToDemand} />
+            <BuyerDemandBoard
+              role={session.role}
+              session={session}
+              lot={lot}
+              onRespond={handleRespondToDemand}
+            />
           </div>
+        );
+
+      case 'bidding':
+        return (
+          <BiddingCenter
+            session={session}
+            lot={lot}
+            onAuctionAwarded={handleCompleteSale}
+            onNavigateToTab={setActiveTab}
+          />
         );
 
       case 'sourcing':
         return (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-5xl mx-auto w-full items-start">
-            <SupplyBoard role={session.role} />
+            <SupplyBoard
+              role={session.role}
+              session={session}
+              lot={lot}
+              onOpenBidding={() => setActiveTab('bidding')}
+            />
             <div className="flex flex-col gap-4">
-              <BuyerDemandBoard role={session.role} lot={lot} onRespond={handleRespondToDemand} />
+              <BuyerDemandBoard
+                role={session.role}
+                session={session}
+                lot={lot}
+                onRespond={handleRespondToDemand}
+              />
               <ArrivalVolumePanel />
             </div>
           </div>
@@ -421,8 +485,21 @@ export default function App() {
 
       case 'pricedata':
         return (
-          <div className="max-w-3xl mx-auto w-full">
-            <PriceModelPanel lot={lot} />
+          <div className="max-w-4xl mx-auto w-full flex flex-col gap-6">
+            <AIPricePredictor
+              lot={lot}
+              onApplyToLot={(newBenchmark, cropName, grade) => {
+                setLot((prev) => ({
+                  ...prev,
+                  localMandiBenchmark: newBenchmark,
+                  cropNameEn: cropName,
+                  grade: (grade as any) || prev.grade
+                }));
+              }}
+            />
+            <div className="pt-2">
+              <PriceModelPanel lot={lot} />
+            </div>
           </div>
         );
 

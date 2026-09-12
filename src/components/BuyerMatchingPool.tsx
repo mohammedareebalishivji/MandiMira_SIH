@@ -105,10 +105,9 @@ export const BuyerMatchingPool: React.FC<BuyerMatchingPoolProps> = ({
                 <span className="font-headline-sm text-[#191c1a] font-bold text-sm truncate">
                   {primaryBuyer.buyerName}
                 </span>
-                <ShieldCheck
-                  className="w-4 h-4 text-[#16532d] flex-shrink-0"
-                  title="Govt Verified FPO Partner"
-                />
+                <span title="Govt Verified FPO Partner" className="inline-flex">
+                  <ShieldCheck className="w-4 h-4 text-[#16532d] flex-shrink-0" />
+                </span>
               </div>
               <span className="font-label-sm text-[#404941] text-xs">
                 {primaryBuyer.type} • {primaryBuyer.rating} ★

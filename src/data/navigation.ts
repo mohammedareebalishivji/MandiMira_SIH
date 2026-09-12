@@ -10,6 +10,7 @@ export type TabId =
   | 'buyers'
   | 'demand'
   | 'sourcing'
+  | 'bidding'
   | 'payments'
   | 'grievance'
   | 'trust'
@@ -28,6 +29,7 @@ export interface TabDefinition {
 
 export const TABS: Record<TabId, TabDefinition> = {
   home:      { id: 'home',      label: 'Home',      icon: 'Home',            blurb: 'Your lot, today’s call and the market at a glance' },
+  bidding:   { id: 'bidding',   label: 'Bidding',   icon: 'Gavel',           blurb: 'Transparent forward & spot crop auctions with real-time bids' },
   decision:  { id: 'decision',  label: 'Decision',  icon: 'TrendingUp',      blurb: 'Sell now or hold — and what it is worth either way' },
   markets:   { id: 'markets',   label: 'Markets',   icon: 'Store',           blurb: 'Net-of-transport realisation across every reachable mandi' },
   arrivals:  { id: 'arrivals',  label: 'Arrivals',  icon: 'BarChart3',       blurb: 'Volume on the yard today vs the 7-day average' },
@@ -41,39 +43,39 @@ export const TABS: Record<TabId, TabDefinition> = {
   trust:     { id: 'trust',     label: 'Trust',     icon: 'ShieldCheck',     blurb: 'Verification status and payment record of every counterparty' },
   ledger:    { id: 'ledger',    label: 'Ledger',    icon: 'ReceiptText',     blurb: 'Settled transactions and bank references' },
   impact:    { id: 'impact',    label: 'Outcomes',  icon: 'Target',          blurb: 'What the platform has actually changed, against baseline' },
-  pricedata: { id: 'pricedata', label: 'Price Data', icon: 'Database',       blurb: 'Observed mandi quotes behind the numbers, and their limits' },
+  pricedata: { id: 'pricedata', label: 'AI Price Model', icon: 'Sparkles', blurb: 'ML model trained on Data.csv with interactive price predictor' },
   more:      { id: 'more',      label: 'More',      icon: 'LayoutGrid',      blurb: 'Everything else available to your role' }
 };
 
 /** Four primary tabs per role plus "More"; the rest live behind the More grid. */
 export const ROLE_NAV: Record<UserRole, { primary: TabId[]; secondary: TabId[] }> = {
   farmer: {
-    primary: ['home', 'decision', 'markets', 'buyers'],
-    secondary: ['quality', 'arrivals', 'logistics', 'payments', 'grievance', 'trust', 'ledger', 'impact', 'pricedata']
+    primary: ['home', 'bidding', 'decision', 'markets'],
+    secondary: ['buyers', 'sourcing', 'quality', 'arrivals', 'logistics', 'payments', 'grievance', 'trust', 'ledger', 'impact', 'pricedata']
   },
   fpo: {
     primary: ['home', 'demand', 'markets', 'payments'],
-    secondary: ['sourcing', 'quality', 'arrivals', 'logistics', 'buyers', 'grievance', 'trust', 'ledger', 'impact', 'pricedata']
+    secondary: ['bidding', 'sourcing', 'quality', 'arrivals', 'logistics', 'buyers', 'grievance', 'trust', 'ledger', 'impact', 'pricedata']
   },
   middleman: {
-    primary: ['sourcing', 'markets', 'demand', 'payments'],
-    secondary: ['arrivals', 'logistics', 'quality', 'grievance', 'trust', 'ledger', 'impact', 'pricedata']
+    primary: ['home', 'bidding', 'sourcing', 'payments'],
+    secondary: ['demand', 'markets', 'arrivals', 'logistics', 'quality', 'grievance', 'trust', 'ledger', 'impact', 'pricedata']
   },
   buyer: {
-    primary: ['demand', 'sourcing', 'quality', 'payments'],
-    secondary: ['markets', 'arrivals', 'logistics', 'grievance', 'trust', 'ledger', 'impact', 'pricedata']
+    primary: ['home', 'demand', 'bidding', 'payments'],
+    secondary: ['sourcing', 'quality', 'markets', 'arrivals', 'logistics', 'grievance', 'trust', 'ledger', 'impact', 'pricedata']
   },
   transporter: {
-    primary: ['logistics', 'sourcing', 'payments', 'trust'],
-    secondary: ['markets', 'arrivals', 'demand', 'grievance', 'impact', 'pricedata']
+    primary: ['home', 'logistics', 'sourcing', 'payments'],
+    secondary: ['trust', 'markets', 'arrivals', 'demand', 'grievance', 'impact', 'pricedata']
   },
   warehouse: {
-    primary: ['logistics', 'sourcing', 'payments', 'trust'],
-    secondary: ['markets', 'arrivals', 'demand', 'grievance', 'impact', 'pricedata']
+    primary: ['home', 'logistics', 'payments', 'trust'],
+    secondary: ['sourcing', 'markets', 'arrivals', 'demand', 'grievance', 'impact', 'pricedata']
   },
   officer: {
-    primary: ['markets', 'arrivals', 'grievance', 'trust'],
-    secondary: ['sourcing', 'demand', 'payments', 'logistics', 'quality', 'ledger', 'impact', 'pricedata']
+    primary: ['home', 'arrivals', 'grievance', 'trust'],
+    secondary: ['markets', 'sourcing', 'demand', 'payments', 'logistics', 'quality', 'ledger', 'impact', 'pricedata']
   }
 };
 

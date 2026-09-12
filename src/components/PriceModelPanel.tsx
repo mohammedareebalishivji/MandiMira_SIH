@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
-  Database, TriangleAlert, MapPin, ArrowUpRight, Info, ChevronDown, ChevronUp
+  Database, TriangleAlert, MapPin, ArrowUpRight, Info, ChevronDown, ChevronUp, Sparkles, ArrowRight
 } from 'lucide-react';
 import {
   PRICE_MODEL_META, MODEL_VALIDATION, GRADE_EFFECT, STATE_FACTORS, STATE_SUPPORT,
   COVERED_STATES, statsForCrop, arbitrageForCrop, negotiationBand, stateIsCovered,
   dispersionIsExtreme
 } from '../data/priceModel';
+import { predictPrice } from '../services/aiPricePredictor';
 import { FarmerLot } from '../types';
 
 interface Props {
   lot: FarmerLot;
+  onOpenAIPredictor?: () => void;
 }
 
 /**
@@ -18,7 +20,7 @@ interface Props {
  * The limits are shown alongside the numbers rather than buried, because a
  * reference price presented without its error bar invites over-trust.
  */
-export const PriceModelPanel: React.FC<Props> = ({ lot }) => {
+export const PriceModelPanel: React.FC<Props> = ({ lot, onOpenAIPredictor }) => {
   const [showLimits, setShowLimits] = useState(false);
   const stats = statsForCrop(lot.cropType);
   const arb = arbitrageForCrop(lot.cropType);
@@ -30,18 +32,63 @@ export const PriceModelPanel: React.FC<Props> = ({ lot }) => {
   // A national median cannot act as a floor when markets disagree this much.
   const extremeSpread = dispersionIsExtreme(lot.cropType);
 
+  const aiPrediction = useMemo(() => {
+    return predictPrice({
+      commodity: lot.cropType,
+      state: lotState || undefined,
+      grade: lot.grade,
+      quantityKg: lot.quantityKg
+    });
+  }, [lot.cropType, lotState, lot.grade, lot.quantityKg]);
+
   return (
     <section className="bg-white rounded-2xl border border-[#c0c9be]/60 p-4 flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <div className="w-9 h-9 rounded-xl bg-[#002b7b]/10 flex items-center justify-center flex-shrink-0">
-          <Database className="w-4.5 h-4.5 text-[#002b7b]" />
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-xl bg-[#002b7b]/10 flex items-center justify-center flex-shrink-0">
+            <Database className="w-4.5 h-4.5 text-[#002b7b]" />
+          </div>
+          <div className="flex flex-col min-w-0">
+            <h3 className="font-headline-sm font-bold text-[#191c1a] text-[15px]">Observed Market Data & AI Model</h3>
+            <span className="font-label-sm text-[11px] text-[#404941]">
+              {PRICE_MODEL_META.rows} quotes · {PRICE_MODEL_META.markets} markets · 55 crops trained
+            </span>
+          </div>
         </div>
-        <div className="flex flex-col min-w-0">
-          <h3 className="font-headline-sm font-bold text-[#191c1a] text-[15px]">Observed Market Data</h3>
-          <span className="font-label-sm text-[11px] text-[#404941]">
-            {PRICE_MODEL_META.rows} quotes · {PRICE_MODEL_META.markets} markets · {PRICE_MODEL_META.states} states
-          </span>
+
+        {onOpenAIPredictor && (
+          <button
+            onClick={onOpenAIPredictor}
+            className="text-xs font-bold text-[#16532d] bg-[#d5f5dc] hover:bg-[#b2f1be] px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#16532d]" />
+            <span>AI Predictor</span>
+            <ArrowRight className="w-3 h-3" />
+          </button>
+        )}
+      </div>
+
+      {/* AI Model Trained Rate Highlight */}
+      <div className="bg-gradient-to-r from-[#003b1b] to-[#124b26] rounded-xl p-3 text-white flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-[#b2f1be]/20 flex items-center justify-center flex-shrink-0">
+            <Sparkles className="w-4 h-4 text-[#b2f1be]" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#88c695]">
+              AI ML Clearing Prediction ({lot.grade})
+            </span>
+            <span className="text-base font-bold font-mono text-white">
+              ₹{aiPrediction.predictedModalPrice.toLocaleString('en-IN')}<span className="text-xs font-normal text-[#b2f1be]"> /Qtl</span>
+              <span className="text-[11px] font-normal text-[#b2f1be]/80 ml-2">
+                (Floor: ₹{aiPrediction.negotiationCorridor.floorRate} · Top: ₹{aiPrediction.negotiationCorridor.premiumRate})
+              </span>
+            </span>
+          </div>
         </div>
+        <span className="text-[10.5px] font-semibold text-[#b2f1be] bg-white/10 px-2 py-0.5 rounded-full font-mono">
+          {aiPrediction.confidenceScore}% Conf.
+        </span>
       </div>
 
       {!stats ? (

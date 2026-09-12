@@ -96,7 +96,7 @@ export interface MandiItem {
 export interface BuyerOffer {
   id: string;
   buyerName: string;
-  type: 'FPO Aggregator' | 'Corporate Processor' | 'Direct Retailer';
+  type: 'FPO Aggregator' | 'Corporate Processor' | 'Direct Retailer' | 'Middleman / Trader' | 'Commission Agent';
   rating: number;
   matchScore: number;
   matchReasons: string[];
@@ -249,7 +249,9 @@ export interface BuyerDemand {
   id: string;
   buyerId: string;
   buyerName: string;
-  buyerType: BuyerOffer['type'];
+  buyerType: BuyerOffer['type'] | 'Middleman / Trader' | 'Commission Agent';
+  buyerRole?: UserRole;
+  buyerPhone?: string;
   cropNameEn: string;
   cropType: CropType;
   requiredQtl: number;
@@ -263,6 +265,8 @@ export interface BuyerDemand {
   status: 'open' | 'partially_filled' | 'closed';
   verified: boolean;
   postedAgo: string;
+  notes?: string;
+  createdAt?: string;
 }
 
 export interface SupplyLot {
@@ -279,6 +283,13 @@ export interface SupplyLot {
   verified: boolean;
   trustScore: number;
   photosCount: number;
+  contactPhone?: string;
+  storageType?: string;
+  variety?: string;
+  notes?: string;
+  availableFrom?: string;
+  status?: 'AVAILABLE' | 'RESERVED' | 'SOLD';
+  createdAt?: string;
 }
 
 /* ============================================================
@@ -371,3 +382,60 @@ export interface ImpactMetric {
   detail: string;
   icon: string;
 }
+
+/* ============================================================
+ * BIDDING & AUCTIONS
+ * ========================================================== */
+
+export type AuctionType = 'FORWARD' | 'SPOT';
+export type AuctionStatus = 'ACTIVE' | 'AWARDED' | 'EXPIRED' | 'CANCELLED';
+export type BidStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'OUTBID';
+
+export interface CropBid {
+  id: string;
+  auctionId: string;
+  bidderId: string;
+  bidderName: string;
+  bidderRole: UserRole;
+  bidderOrg: string;
+  bidderPhone: string;
+  bidderTrustScore: number;
+  offeredPricePerQtl: number;
+  totalAmount: number;
+  proposedDeliveryDate: string;
+  paymentTerms: string;
+  pickupOption: string;
+  notes?: string;
+  status: BidStatus;
+  createdAt: string;
+}
+
+export interface CropAuction {
+  id: string;
+  lotId: string;
+  farmerId: string;
+  farmerName: string;
+  farmerPhone: string;
+  farmerLocation: string;
+  farmerTrustScore: number;
+  cropNameEn: string;
+  cropType: CropType;
+  variety: string;
+  quantityKg: number;
+  grade: QualityGrade;
+  basePricePerQtl: number;
+  minIncrementPerQtl: number;
+  currentHighestBidPerQtl: number;
+  highestBidderName?: string;
+  highestBidderId?: string;
+  totalBidsCount: number;
+  type: AuctionType;
+  deliveryPreference: string;
+  paymentTermsPreference: string;
+  expiresAt: string;
+  status: AuctionStatus;
+  winningBidId?: string;
+  bids: CropBid[];
+  createdAt: string;
+}
+

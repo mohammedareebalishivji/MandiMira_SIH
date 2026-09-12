@@ -34,7 +34,7 @@ export const ROLES: RoleDefinition[] = [
       'Farmer Producer Organisation or co-operative. Pool member lots into bulk consignments and unlock volume premiums.',
     icon: 'Users',
     accent: '#003b1b',
-    homeTab: 'aggregation',
+    homeTab: 'home',
     capabilities: [
       'Member lot aggregation',
       'Bulk premium negotiation',
@@ -52,7 +52,7 @@ export const ROLES: RoleDefinition[] = [
       'Commission agent, arhtiya or independent trader. Discover supply, quote transparently and build a verifiable track record.',
     icon: 'Handshake',
     accent: '#904d00',
-    homeTab: 'sourcing',
+    homeTab: 'home',
     capabilities: [
       'Live supply board',
       'Transparent quoting',
@@ -70,7 +70,7 @@ export const ROLES: RoleDefinition[] = [
       'Corporate processor, exporter, institutional buyer or retailer. Post demand with quality specs and source verified lots.',
     icon: 'Factory',
     accent: '#002b7b',
-    homeTab: 'demand',
+    homeTab: 'home',
     capabilities: [
       'Post demand with quality specs',
       'Verified supply sourcing',
@@ -88,7 +88,7 @@ export const ROLES: RoleDefinition[] = [
       'Fleet owner or individual vehicle operator. Pick up consignment jobs, quote on routes and coordinate pickup windows.',
     icon: 'Truck',
     accent: '#663500',
-    homeTab: 'logistics',
+    homeTab: 'home',
     capabilities: [
       'Open consignment jobs',
       'Route & backhaul matching',
@@ -105,7 +105,7 @@ export const ROLES: RoleDefinition[] = [
       'Cold-chain operator or warehousing facility. List available capacity, accept bookings and issue storage receipts.',
     icon: 'Warehouse',
     accent: '#2f6a41',
-    homeTab: 'storage',
+    homeTab: 'home',
     capabilities: [
       'Publish live capacity',
       'Accept hold bookings',
@@ -122,7 +122,7 @@ export const ROLES: RoleDefinition[] = [
       'APMC official or regulator. Monitor arrivals, price deviation, transaction transparency and mediate grievances.',
     icon: 'ShieldCheck',
     accent: '#003fab',
-    homeTab: 'oversight',
+    homeTab: 'home',
     capabilities: [
       'Arrival & congestion monitoring',
       'Price deviation alerts',

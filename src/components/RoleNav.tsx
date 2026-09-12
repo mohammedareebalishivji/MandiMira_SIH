@@ -1,14 +1,14 @@
 import React from 'react';
 import {
   Home, TrendingUp, Store, BarChart3, ScanLine, Truck, Users, Factory, Boxes,
-  BadgeIndianRupee, Scale, ShieldCheck, ReceiptText, Target, LayoutGrid, Database, LucideIcon
+  BadgeIndianRupee, Scale, ShieldCheck, ReceiptText, Target, LayoutGrid, Database, Sparkles, Gavel, LucideIcon
 } from 'lucide-react';
 import { TABS, TabId, ROLE_NAV } from '../data/navigation';
 import { UserRole } from '../types';
 
 export const NAV_ICONS: Record<string, LucideIcon> = {
   Home, TrendingUp, Store, BarChart3, ScanLine, Truck, Users, Factory, Boxes,
-  BadgeIndianRupee, Scale, ShieldCheck, ReceiptText, Target, LayoutGrid, Database
+  BadgeIndianRupee, Scale, ShieldCheck, ReceiptText, Target, LayoutGrid, Database, Sparkles, Gavel
 };
 
 interface Props {
