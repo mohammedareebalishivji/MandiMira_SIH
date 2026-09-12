@@ -1,0 +1,6 @@
+{
+  "name": "MandiMitra",
+  "description": "Agricultural market decision-intelligence platform for Indian farmers and FPOs to optimize when, where, and how to sell.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
